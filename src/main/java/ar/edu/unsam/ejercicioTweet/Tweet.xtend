@@ -14,8 +14,8 @@ import static extension org.uqbar.arena.xtend.ArenaXtendExtensions.*
 @Accessors
 @Observable
 class Tweet {
+	public static int MAX = 140
 	String texto = ""
-	public static int MAX = 6
 
 	@Dependencies("texto")
 	def getLetrasRestantes() {
@@ -23,12 +23,27 @@ class Tweet {
 		MAX - texto.length()
 	}
 
+	
+	def validarLongitud(String tweet) {
+		 tweet.length <= MAX 
+			
+		 
+	}
+	
+}
+
+class TweetWindow extends MainWindow<Tweet> {
+
+	new() {
+		super(new Tweet)
+	}
+	public static int COLOR_CRITICO = 5
+
 	@Dependencies("texto")
 	def getEstadoCritico() {
-		this.getLetrasRestantes <= 5
+		modelObject.getLetrasRestantes <= COLOR_CRITICO
 
 	}
-
 	@Dependencies("texto")
 	def getElegirColor() {
 		if (getEstadoCritico) {
@@ -37,15 +52,9 @@ class Tweet {
 			Color.GREEN
 
 		}
-	}
-}
-
-class TweetWindow extends MainWindow<Tweet> {
-
-	new() {
-		super(new Tweet)
-	}
-
+		
+		
+		}
 	override createContents(Panel mainPanel) {
 		new Label(mainPanel) => [
 			text = "Tweet"
@@ -53,7 +62,9 @@ class TweetWindow extends MainWindow<Tweet> {
 
 		new TextBox(mainPanel) => [
 			value <=> "texto"
+			height = 100
 			width = 200
+			withFilter [evento | modelObject.validarLongitud(evento.potentialTextResult)]
 		]
 		new Label(mainPanel) => [
 			value <=> "letrasRestantes"
