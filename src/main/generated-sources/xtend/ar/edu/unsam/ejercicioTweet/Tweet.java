@@ -9,7 +9,7 @@ import org.uqbar.commons.model.annotations.Observable;
 @Observable
 @SuppressWarnings("all")
 public class Tweet {
-  public static int MAX = 140;
+  public static int MAX = 6;
   
   private String texto = "";
   

@@ -13,38 +13,19 @@ import org.uqbar.arena.widgets.TextBox;
 import org.uqbar.arena.widgets.TextInputEvent;
 import org.uqbar.arena.windows.MainWindow;
 import org.uqbar.arena.xtend.ArenaXtendExtensions;
-import org.uqbar.commons.model.annotations.Dependencies;
 import org.uqbar.lacar.ui.model.ControlBuilder;
-import org.uqbar.lacar.ui.model.bindings.ViewObservable;
 
 @SuppressWarnings("all")
 public class TweetWindow extends MainWindow<Tweet> {
+  public static int COLOR_CRITICO = 5;
+  
   public TweetWindow() {
     super(new Tweet());
   }
   
-  public static int COLOR_CRITICO = 5;
-  
-  @Dependencies("texto")
-  public boolean getEstadoCritico() {
-    int _letrasRestantes = this.getModelObject().getLetrasRestantes();
-    return (_letrasRestantes <= TweetWindow.COLOR_CRITICO);
-  }
-  
-  @Dependencies("texto")
-  public Color getElegirColor() {
-    Color _xifexpression = null;
-    boolean _estadoCritico = this.getEstadoCritico();
-    if (_estadoCritico) {
-      _xifexpression = Color.RED;
-    } else {
-      _xifexpression = Color.GREEN;
-    }
-    return _xifexpression;
-  }
-  
   @Override
   public void createContents(final Panel mainPanel) {
+    this.setTitle("Twitter");
     Label _label = new Label(mainPanel);
     final Procedure1<Label> _function = (Label it) -> {
       it.setText("Tweet");
@@ -66,13 +47,28 @@ public class TweetWindow extends MainWindow<Tweet> {
     final Procedure1<Label> _function_2 = (Label it) -> {
       ObservableValue<Control, ControlBuilder> _value = it.<ControlBuilder>value();
       ArenaXtendExtensions.operator_spaceship(_value, "letrasRestantes");
-      ViewObservable<Control, ControlBuilder> _foreground = it.<ControlBuilder>foreground();
-      ArenaXtendExtensions.operator_spaceship(_foreground, "elegirColor");
+      it.setForeground(this.getElegirColor());
     };
     ObjectExtensions.<Label>operator_doubleArrow(_label_1, _function_2);
   }
   
   public static void main(final String[] args) {
     new TweetWindow().startApplication();
+  }
+  
+  public boolean getEstadoCritico() {
+    int _letrasRestantes = this.getModelObject().getLetrasRestantes();
+    return (_letrasRestantes <= TweetWindow.COLOR_CRITICO);
+  }
+  
+  public Color getElegirColor() {
+    Color _xifexpression = null;
+    boolean _estadoCritico = this.getEstadoCritico();
+    if (_estadoCritico) {
+      _xifexpression = Color.RED;
+    } else {
+      _xifexpression = Color.GREEN;
+    }
+    return _xifexpression;
   }
 }

@@ -14,48 +14,29 @@ import static extension org.uqbar.arena.xtend.ArenaXtendExtensions.*
 @Accessors
 @Observable
 class Tweet {
-	public static int MAX = 140
+	public static int MAX = 6
 	String texto = ""
 
 	@Dependencies("texto")
 	def getLetrasRestantes() {
-
 		MAX - texto.length()
 	}
 
-	
 	def validarLongitud(String tweet) {
-		 tweet.length <= MAX 
-			
-		 
+		tweet.length <= MAX
 	}
-	
+
 }
 
 class TweetWindow extends MainWindow<Tweet> {
+	public static int COLOR_CRITICO = 5
 
 	new() {
 		super(new Tweet)
 	}
-	public static int COLOR_CRITICO = 5
 
-	@Dependencies("texto")
-	def getEstadoCritico() {
-		modelObject.getLetrasRestantes <= COLOR_CRITICO
-
-	}
-	@Dependencies("texto")
-	def getElegirColor() {
-		if (getEstadoCritico) {
-			Color.RED
-		} else {
-			Color.GREEN
-
-		}
-		
-		
-		}
 	override createContents(Panel mainPanel) {
+		this.title = "Twitter"
 		new Label(mainPanel) => [
 			text = "Tweet"
 		]
@@ -64,15 +45,31 @@ class TweetWindow extends MainWindow<Tweet> {
 			value <=> "texto"
 			height = 100
 			width = 200
-			withFilter [evento | modelObject.validarLongitud(evento.potentialTextResult)]
+			withFilter[evento|modelObject.validarLongitud(evento.potentialTextResult)]
 		]
+
 		new Label(mainPanel) => [
 			value <=> "letrasRestantes"
-			foreground <=> "elegirColor"
+			foreground = elegirColor
 		]
 	}
 
 	def static void main(String[] args) {
 		new TweetWindow().startApplication
 	}
+	
+//	@Dependencies("texto")
+	def getEstadoCritico() {
+		modelObject.getLetrasRestantes <= COLOR_CRITICO
+	}
+
+//	@Dependencies("texto")
+	def getElegirColor() {
+		if (estadoCritico) {
+			Color.RED
+		} else {
+			Color.GREEN
+		}
+	}
+	
 }
